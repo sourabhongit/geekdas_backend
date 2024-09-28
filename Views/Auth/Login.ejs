@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1.0"
+		/>
+		<title>Login</title>
+		<link rel="stylesheet" href="/Css/Output.css">
+	</head>
+	<body class="bg-gray-100 flex items-center justify-center h-screen">
+      <div class="bg-white p-6 rounded-lg shadow-md w-80">
+          <h1 class="text-xl font-bold mb-4">Login</h1>
+          <form action="/login" method="POST" onsubmit="return validateForm()">
+              <div class="mb-4">
+                  <label for="username" class="block text-sm font-medium text-gray-700">Username:</label>
+                  <input type="text" id="username" name="username" required class="mt-1 block w-full border border-gray-300 rounded-md p-2" />
+                  <span id="usernameError" class="text-red-500 text-xs"></span>
+              </div>
+              <div class="mb-4">
+                  <label for="password" class="block text-sm font-medium text-gray-700">Password:</label>
+                  <input type="password" id="password" name="password" required class="mt-1 block w-full border border-gray-300 rounded-md p-2" />
+                  <span id="passwordError" class="text-red-500 text-xs"></span>
+              </div>
+              <button type="submit" class="w-full bg-blue-500 text-white p-2 rounded-md">Login</button>
+          </form>
+      </div>
+
+		<script>
+			function validateForm() {
+				let valid = true;
+
+				// Clear previous error messages
+				document.getElementById("usernameError").innerText = "";
+				document.getElementById("passwordError").innerText = "";
+
+				const username = document.getElementById("username").value;
+				const password = document.getElementById("password").value;
+
+				// Basic validation
+				if (username.length < 3) {
+					document.getElementById("usernameError").innerText = "Username must be at least 3 characters long.";
+					valid = false;
+				}
+
+				if (password.length < 6) {
+					document.getElementById("passwordError").innerText = "Password must be at least 6 characters long.";
+					valid = false;
+				}
+
+				return valid;
+			}
+		</script>
+	</body>
+</html>
