@@ -16,9 +16,23 @@
 			href="/Css/Global.css"
 		/>
 	</head>
-	<body>
-		<%- include('./Partials/Header.ejs') %>
-		<section><%- Section %></section>
-		<%- include('./Partials/Footer.ejs') %>
+	<body class="expanded">
+		<%- include('./Partials/Sidebar.ejs') %>
+		<div class="main-container">
+			<%- include('./Partials/Header.ejs') %>
+			<section class="main-content">
+				<div class="inner-section"><%- Section %></div>
+			</section>
+			<%- include('./Partials/Footer.ejs') %>
+		</div>
+		<script>
+			// Sidebar toggle
+			const toggleBtn = document.getElementById("toggleBtn");
+			const sidebar = document.getElementById("sidebar");
+
+			toggleBtn.addEventListener("click", () => {
+				sidebar.classList.toggle("collapsed");
+			});
+		</script>
 	</body>
 </html>
