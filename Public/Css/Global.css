@@ -9,6 +9,8 @@ body {
    display: flex;
    height: 100vh;
    overflow: hidden;
+   font-family: "Ubuntu", sans-serif;
+   font-weight: 500;
 }
 
 /* Sidebar */
