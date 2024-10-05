@@ -1,7 +1,10 @@
-const users = [
-   { username: 'admin', password: 'abc2@bcr' },
-];
+const mongoose = require('mongoose');
 
-exports.findUser = (username) => {
-   return users.find(user => user.username === username);
-};
+const UserSchema = new mongoose.Schema({
+  username: String,
+  password: String,
+});
+
+const User = mongoose.model('User', UserSchema);
+
+module.exports = User;

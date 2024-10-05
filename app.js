@@ -1,6 +1,8 @@
+require('dotenv').config();
 const express = require("express");
 const session = require("express-session");
 const cors = require("cors");
+const ConnectDB = require('./Config/database');
 const bodyParser = require("body-parser");
 const app = express();
 const path = require("path");
@@ -26,6 +28,9 @@ app.use(cors({ origin: "http://localhost:3000" }));
 
 // Set views
 app.set("views", path.join(__dirname, "./Views"));
+
+// Database
+ConnectDB();
 
 // Routes
 app.use("/admin", require("./Routes/AdminRoutes/AdminRoutes"));
