@@ -1,44 +1,55 @@
-require("dotenv").config();
 const mongoose = require("mongoose");
+require("dotenv").config();
+const bcrypt = require("bcryptjs");
 const User = require("../Models/Auth/UserModel");
 
 // Connect to MongoDB
-const ConnectDB = async () => {
-	try {
-		await mongoose.connect(process.env.MONGO_URI);
-		console.log("MongoDB connected successfully for seeding");
-	} catch (error) {
-		console.error("MongoDB connection failed:", error.message);
-		process.exit(1);
-	}
-};
+const DBUri = process.env.MONGO_URI;
 
-// Create seed data
+mongoose.connect(DBUri);
+
+mongoose.connection.on("connected", () => {
+  console.log("Connected to MongoDB");
+});
+
+mongoose.connection.on("error", (err) => {
+  console.log("MongoDB connection error: " + err);
+});
+
+// Sample users
+const users = [
+  {
+    username: "admin",
+    password: "abc2@bcr",
+    isVerified: true,
+  }
+];
+
+// Hash password and insert users into the database
 const SeedUsers = async () => {
-	try {
-		// Define the seed data
-		const users = [{ username: "admin", password: "abc2@bcr" }];
+  try {
+    // Clear existing users (optional)
+    await User.deleteMany({});
+    console.log("All existing users removed");
 
-		// Clear existing users in the database
-		await User.deleteMany({});
-		console.log("Users collection cleared");
+    // Hash passwords and insert users
+    for (const user of users) {
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(user.password, salt);
+      user.password = hashedPassword;
+    }
 
-		// Insert new seed data
-		await User.insertMany(users);
-		console.log("Users seeded successfully");
+    // Insert users into the database
+    await User.insertMany(users);
+    console.log("Users seeded successfully");
 
-		// Close the connection
-		mongoose.connection.close();
-	} catch (error) {
-		console.error("Error seeding users:", error);
-		mongoose.connection.close();
-	}
+    // Close the MongoDB connection
+    mongoose.connection.close();
+  } catch (err) {
+    console.error("Error seeding users:", err);
+    mongoose.connection.close();
+  }
 };
 
 // Run the seeder
-const RunSeeder = async () => {
-	await ConnectDB();
-	await SeedUsers();
-};
-
-RunSeeder();
+SeedUsers();
