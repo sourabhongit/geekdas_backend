@@ -1,6 +1,7 @@
 const User = require('../../Models/Auth/UserModel');
 
 exports.Login = (req, res) => {
+	console.log(req);
 	res.render("Auth/Login");
 };
 
@@ -11,6 +12,6 @@ exports.LoginStore = (req, res) => {
 	if (user && user.password === password) {
 		 res.redirect('/admin/dashboard');
 	} else {
-		 res.render('/login', { error: 'Invalid username or password' });
+		 res.render("Auth/Login", { error: 'Invalid username or password' });
 	}
 };
