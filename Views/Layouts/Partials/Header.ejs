@@ -4,7 +4,20 @@
 			<li><a href="/">Home</a></li>
 			<li><a href="/dashboard">Dashboard</a></li>
 			<li><a href="/profile">Profile</a></li>
-			<li><a href="/logout">Logout</a></li>
+			<li>
+				<form
+					action="/admin/auth/logout"
+					method="POST"
+					style="display: inline"
+				>
+					<button
+						type="submit"
+						style="border: none; background: none; cursor: pointer; color: inherit;"
+					>
+						Logout
+					</button>
+				</form>
+			</li>
 		</ul>
 	</nav>
 </header>
