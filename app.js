@@ -5,6 +5,7 @@ const ConnectDB = require("./Config/database");
 const bodyParser = require("body-parser");
 const app = express();
 const path = require("path");
+const session = require('./Config/session');
 const ListEndpoints = require("express-list-endpoints");
 
 // View engine setup
@@ -21,6 +22,9 @@ app.set("views", path.join(__dirname, "./Views"));
 
 // Database connection
 ConnectDB();
+
+// Session config
+app.use(session);
 
 // Routes
 app.use("/admin", require("./Routes/AdminRoutes/AdminRoutes"));
