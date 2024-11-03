@@ -15,7 +15,7 @@ body {
 
 /* Sidebar */
 .sidebar {
-   width: 250px;
+   width: 200px;
    height: 100vh;
    background-color: #0c0b10;
    color: white;
@@ -25,7 +25,7 @@ body {
 }
 
 .sidebar.collapsed {
-   width: 80px;
+   width: 60px;
 }
 
 /* Main Content Container */
@@ -46,8 +46,8 @@ body {
 
 /* Header */
 header {
-   background-color: #333;
-   padding: 10px;
+   background-color: #02111B;
+   padding: 11px;
    color: white;
 }
 
@@ -65,7 +65,7 @@ header nav ul li a {
 
 /* Footer */
 footer {
-   background-color: #333;
+   background-color: #02111B;
    color: white;
    padding: 10px;
    flex-shrink: 0;
@@ -73,19 +73,20 @@ footer {
 
 /* Sidebar Toggle Button */
 .toggle-btn {
-   background-color: #333;
+   background-color: #0c0b10;
    color: white;
    padding: 10px;
    text-align: center;
    cursor: pointer;
-}
-
-/* Transition for the toggle button */
-.sidebar.collapsed .toggle-btn {
-   transform: rotate(180deg);
+   border-top: 1px solid #fff;
 }
 
 .side-head-icons {
    height: 1.3rem;
    width: 1.3rem;
 }
+
+.rotate {
+   transition: transform 0.3s ease;
+   transform: rotate(180deg); /* Rotates 180 degrees */
+ }

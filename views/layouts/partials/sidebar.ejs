@@ -5,13 +5,45 @@
 	<div
 		class="toggle-btn"
 		id="toggleBtn"
+		onclick="collapse()"
 	>
-		☰
+		<i class="fa-solid fa-bars fa-lg"></i>
 	</div>
-	<ul>
-		<li><a href="/">Home</a></li>
-		<li><a href="/dashboard">Dashboard</a></li>
-		<li><a href="/profile">Profile</a></li>
-		<li><a href="/logout">Logout</a></li>
-	</ul>
+	<div>
+		<ul class="my-2 mx-2">
+			<a href="/admin/dashboard"
+				><li class="p-3 rounded-md hover:bg-white cursor-pointer hover:text-black"><i class="fa-solid fa-table-columns fa-lg"></i><span class="side-bar-text">&nbsp; Dashboard</span></li></a
+			>
+			<a href="/admin/auth/logout"
+				><li class="p-3 rounded-md hover:bg-white cursor-pointer hover:text-black">
+					<i class="fa-solid fa-arrow-right-from-bracket fa-lg"></i><span class="side-bar-text">&nbsp; Logout</span>
+				</li></a
+			>
+		</ul>
+	</div>
 </div>
+<script>
+	let state = 0;
+	function collapse() {
+		const sidebarTextElements = document.querySelectorAll(".side-bar-text");
+		const toggleButton = document.querySelector(".toggle-btn");
+
+		if (state === 0) {
+			sidebarTextElements.forEach((element) => {
+				element.style.display = "none";
+			});
+			state = 1;
+			toggleButton.innerHTML = `<i class="fa-solid fa-xmark fa-xl"></i>`;
+			toggleButton.classList.add("rotate");
+		} else {
+			setTimeout(() => {
+				sidebarTextElements.forEach((element) => {
+					element.style.display = "";
+				});
+			}, 200);
+			toggleButton.innerHTML = `<i class="fa-solid fa-bars fa-lg"></i>`;
+			toggleButton.classList.remove("rotate");
+			state = 0;
+		}
+	}
+</script>
