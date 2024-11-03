@@ -1,11 +1,11 @@
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
-const ConnectDB = require("./Config/database");
+const ConnectDB = require("./config/database");
 const bodyParser = require("body-parser");
 const app = express();
 const path = require("path");
-const session = require('./Config/session');
+const session = require('./config/session');
 const ListEndpoints = require("express-list-endpoints");
 
 // View engine setup
@@ -14,11 +14,11 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 // Static assets
-app.use(express.static(path.join(__dirname, "Public")));
+app.use(express.static(path.join(__dirname, "public")));
 app.use(cors({ origin: process.env.CLIENT_URL || "http://localhost:3000" }));
 
 // Set views
-app.set("views", path.join(__dirname, "./Views"));
+app.set("views", path.join(__dirname, "./views"));
 
 // Database connection
 ConnectDB();
@@ -27,8 +27,8 @@ ConnectDB();
 app.use(session);
 
 // Routes
-app.use("/admin", require("./Routes/AdminRoutes/AdminRoutes"));
-app.use("/admin/auth", require("./Routes/AuthRoutes/AuthRoutes"));
+app.use("/admin", require("./routes/admin_routes/admin_routes"));
+app.use("/admin/auth", require("./routes/auth_routes/auth_routes"));
 
 // List all the routes in console
 console.log(ListEndpoints(app));

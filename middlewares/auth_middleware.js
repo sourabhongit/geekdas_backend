@@ -1,5 +1,5 @@
 // Middleware on routes that require the user to be logged in.
-function IsAuthenticated(req, res, next) {
+function is_authenticated(req, res, next) {
     // Check if user session exists
     if (req.session && req.session.userId) {
         return next();
@@ -9,7 +9,7 @@ function IsAuthenticated(req, res, next) {
 }
 
 // Middleware on the login route to prevent logged-in users from accessing it.
-function RedirectIfAuthenticated(req, res, next) {
+function redirect_if_authenticated(req, res, next) {
     // If user is already logged in, redirect to dashboard
     if (req.session && req.session.userId) {
         return res.redirect('/admin/dashboard');
@@ -17,4 +17,4 @@ function RedirectIfAuthenticated(req, res, next) {
     next();
 }
 
-module.exports = { IsAuthenticated, RedirectIfAuthenticated };
+module.exports = { is_authenticated, redirect_if_authenticated };
