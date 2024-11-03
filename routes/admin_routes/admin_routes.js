@@ -9,5 +9,6 @@ const { is_authenticated, redirect_if_authenticated } = require("../../middlewar
 // Route prefix "/admin"
 router.get("/dashboard", is_authenticated, dashboard_controller.dashboard);
 router.get("/skills", is_authenticated, skill_controller.skill_index);
+router.get("/skill/create", is_authenticated, skill_controller.skill_create);
 
 module.exports = router;
