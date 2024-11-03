@@ -23,7 +23,7 @@
     "start": "nodemon app.js",
     "dev": "nodemon app.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build:css": "tailwindcss -i ./Public/Css/Styles.css -o ./Public/Css/Output.css --watch"
+    "build:css": "tailwindcss -i ./public/css/styles.css -o ./public/css/output.css --watch"
   },
   "author": "Sourabh Das",
   "license": "ISC",
