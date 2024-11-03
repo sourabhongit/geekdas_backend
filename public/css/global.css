@@ -34,12 +34,13 @@ body {
    display: flex;
    flex-direction: column;
    transition: width 0.3s ease;
+   overflow: auto;
 }
 
 /* Main Content */
 .main-content {
    flex-grow: 1;
-   padding: 20px;
+   padding: 1rem;
    background-color: #ecf0f1;
    transition: padding-left 0.3s ease;
 }
@@ -49,6 +50,10 @@ header {
    background-color: #02111B;
    padding: 11px;
    color: white;
+   width: auto;
+   position: fixed;
+   top: 0;
+   z-index: 10;
 }
 
 header nav ul {
@@ -90,3 +95,8 @@ footer {
    transition: transform 0.3s ease;
    transform: rotate(180deg); /* Rotates 180 degrees */
  }
+
+
+span.side-bar-text {
+   margin-left: 0.4rem;
+}

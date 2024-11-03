@@ -2,6 +2,7 @@
 	class="sidebar"
 	id="sidebar"
 >
+	<!-- Toggle Button -->
 	<div
 		class="toggle-btn"
 		id="toggleBtn"
@@ -9,19 +10,37 @@
 	>
 		<i class="fa-solid fa-bars fa-lg"></i>
 	</div>
+
+	<!-- Sidebar Links -->
 	<div>
 		<ul class="my-2 mx-2">
-			<a href="/admin/dashboard"
-				><li class="p-3 rounded-md hover:bg-white cursor-pointer hover:text-black"><i class="fa-solid fa-table-columns fa-lg"></i><span class="side-bar-text">&nbsp; Dashboard</span></li></a
-			>
-			<a href="/admin/auth/logout"
-				><li class="p-3 rounded-md hover:bg-white cursor-pointer hover:text-black">
-					<i class="fa-solid fa-arrow-right-from-bracket fa-lg"></i><span class="side-bar-text">&nbsp; Logout</span>
-				</li></a
-			>
+			<a href="/admin/dashboard">
+				<li class="p-3 rounded-md hover:bg-white cursor-pointer hover:text-black">
+					<i class="fa-solid fa-table-columns fa-lg"></i>
+					<span class="side-bar-text">Dashboard</span>
+				</li>
+			</a>
+			<a href="/admin/skills">
+				<li class="p-3 rounded-md hover:bg-white cursor-pointer hover:text-black">
+					<i class="fa-solid fa-code fa-lg"></i>
+					<span class="side-bar-text">Skills</span>
+				</li>
+			</a>
+			<li class="p-3 rounded-md hover:bg-white cursor-pointer hover:text-black">
+				<form
+					action="/admin/auth/logout"
+					method="POST"
+				>
+					<button type="submit">
+						<i class="fa-solid fa-arrow-right-from-bracket fa-lg"></i>
+						<span class="side-bar-text">Logout</span>
+					</button>
+				</form>
+			</li>
 		</ul>
 	</div>
 </div>
+
 <script>
 	let state = 0;
 	function collapse() {
