@@ -10,5 +10,6 @@ const { is_authenticated, redirect_if_authenticated } = require("../../middlewar
 router.get("/dashboard", is_authenticated, dashboard_controller.dashboard);
 router.get("/skills", is_authenticated, skill_controller.skill_index);
 router.get("/skill/create", is_authenticated, skill_controller.skill_create);
+router.post("/skill/store", is_authenticated, skill_controller.skill_store);
 
 module.exports = router;
