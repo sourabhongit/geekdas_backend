@@ -96,7 +96,10 @@ footer {
    transform: rotate(180deg); /* Rotates 180 degrees */
  }
 
-
 span.side-bar-text {
    margin-left: 0.4rem;
+}
+
+.side-menu-list {
+   padding: .45rem;
 }
