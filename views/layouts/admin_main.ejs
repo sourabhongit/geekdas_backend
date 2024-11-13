@@ -31,9 +31,15 @@
 		/>
 
 		<!-- Icons -->
-		<script src="https://kit.fontawesome.com/5b8779a7c9.js" crossorigin="anonymous"></script>
+		<script
+			src="https://kit.fontawesome.com/5b8779a7c9.js"
+			crossorigin="anonymous"
+		></script>
 	</head>
 	<body class="expanded">
+		<div id="loading-screen">
+			<div class="spinner"></div>
+		</div>
 		<%- include('./partials/sidebar.ejs') %>
 		<div class="main-container">
 			<section class="main-content">
@@ -47,6 +53,11 @@
 
 			toggleBtn.addEventListener("click", () => {
 				sidebar.classList.toggle("collapsed");
+			});
+			window.addEventListener("load", function () {
+				// Hide the loading screen and show the content
+				document.getElementById("loading-screen").style.display = "none";
+				document.getElementById("content").style.display = "block";
 			});
 		</script>
 	</body>

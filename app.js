@@ -10,8 +10,8 @@ const ListEndpoints = require("express-list-endpoints");
 
 // View engine setup
 app.set("view engine", "ejs");
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
 
 // Static assets
 app.use(express.static(path.join(__dirname, "public")));

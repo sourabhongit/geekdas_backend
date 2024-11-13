@@ -1,6 +1,12 @@
 const multer = require("multer");
 const path = require("path");
 const Skill = require("../../models/auth/skill_model");
+const upload = require("../../middlewares/multer_middleware");
+
+// For delay testing
+function sleep(ms) {
+	return new Promise((resolve) => setTimeout(resolve, ms));
+}
 
 exports.skill_index = async (req, res) => {
 	try {
@@ -33,21 +39,15 @@ exports.skill_create = (req, res) => {
 };
 
 exports.skill_store = async (req, res) => {
-	// Set up custom multer storage for this controller function
-	const storage = multer.diskStorage({
-		destination: (req, file, cb) => {
-			cb(null, "storage/uploads/skills");
-		},
-		filename: (req, file, cb) => {
-			const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-			cb(null, `${req.body.name}-${uniqueSuffix}${path.extname(file.originalname)}`);
-		},
-	});
+	const destinationPath = path.join(__dirname, "../../public/storage/skill");
+	const filenameFunction = (req, file) => {
+		return `skill_${Date.now()}${path.extname(file.originalname)}`;
+	};
 
-	const upload = multer({ storage: storage }).single("image");
+	const uploadSingle = upload(destinationPath, filenameFunction).single("image");
 
 	// Use the multer upload function
-	upload(req, res, async function (err) {
+	uploadSingle(req, res, async function (err) {
 		if (err) {
 			console.error("Multer error:", err);
 			return res.status(500).send("Error uploading file.");
@@ -56,7 +56,6 @@ exports.skill_store = async (req, res) => {
 		// Access form data and uploaded file
 		const { name, level, order } = req.body;
 		const image = req.file;
-
 		try {
 			// Check if the image was uploaded
 			if (!image) {
@@ -97,50 +96,67 @@ exports.skill_edit = async (req, res) => {
 };
 
 exports.skill_update = async (req, res) => {
-	// Set up custom multer storage for this controller function
-	const storage = multer.diskStorage({
-		destination: (req, file, cb) => {
-			cb(null, "storage/uploads/skills");
-		},
-		filename: (req, file, cb) => {
-			const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-			cb(null, `${req.body.name}-${uniqueSuffix}${path.extname(file.originalname)}`);
-		},
-	});
+	// Helper function to find and update skill
+	const updateSkillData = async (skill, fieldsToUpdate) => {
+		Object.keys(fieldsToUpdate).forEach((key) => {
+			if (fieldsToUpdate[key] !== undefined) skill[key] = fieldsToUpdate[key];
+		});
+		await skill.save();
+	};
 
-	const upload = multer({ storage: storage }).single("image");
+	// Helper function to handle the response
+	const handleResponse = (status, message, skill) => {
+		return res.status(status).json({ message, skill });
+	};
 
-	// Use the multer upload function
-	upload(req, res, async function (err) {
-		if (err) {
-			console.error("Multer error:", err);
-			return res.status(500).send("Error uploading file.");
+	try {
+		const skillId = req.body.id;
+		const skill = await Skill.findById(skillId);
+		if (!skill) {
+			return handleResponse(404, "Skill not found");
 		}
 
-		// Access form data and uploaded file
-		const { name, level, order } = req.body;
-		const image = req.file;
+		// Handle file upload if there's an image file
+		if (req.file) {
+			const destinationPath = path.join(__dirname, "../../public/storage/skill");
+			const filenameFunction = (req, file) => `skill_${Date.now()}${path.extname(file.originalname)}`;
 
-		try {
-			// Check if the image was uploaded
-			if (!image) {
-				return res.status(400).send("Image upload failed.");
-			}
+			// Set up multer with the destination and filename function
+			const uploadSingle = upload(destinationPath, filenameFunction).single("image");
 
-			// Insert data into the database
-			await Skill.create({
-				name: name,
-				level: level,
-				order: parseInt(order),
-				image: image.filename,
+			uploadSingle(req, res, async (err) => {
+				if (err) {
+					return res.status(400).json({ message: `File upload failed: ${err.message}` });
+				}
+
+				// Proceed with updating skill data after file upload
+				const { name, level, order } = req.body;
+
+				const fieldsToUpdate = {
+					name: name || skill.name,
+					level: level || skill.level,
+					order: order || skill.order,
+					image: req.file ? req.file.filename : skill.image, // Update image if a new file is uploaded
+				};
+
+				await updateSkillData(skill, fieldsToUpdate);
+				return handleResponse(200, "Skill updated successfully", skill);
 			});
+		} else {
+			// No image file uploaded; only update other fields
+			const { name, level, order } = req.body;
 
-			// Redirect to skills page after success
-			return res.status(200).redirect("/admin/skills");
-		} catch (err) {
-			console.error("Database error:", err);
-			// Redirect back to the create page with a failure status
-			return res.status(400).redirect("/admin/skills/create");
+			const fieldsToUpdate = {
+				name: name || skill.name,
+				level: level || skill.level,
+				order: order || skill.order,
+			};
+
+			await updateSkillData(skill, fieldsToUpdate);
+			return handleResponse(200, "Skill updated successfully", skill);
 		}
-	});
+	} catch (error) {
+		console.error("Error updating skill:", error);
+		return res.status(500).json({ message: `Internal server error: ${error.message}` });
+	}
 };

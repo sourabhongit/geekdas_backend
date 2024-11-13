@@ -11,6 +11,15 @@
 			class="w-full mx-auto space-y-6"
 			enctype="multipart/form-data"
 		>
+			<% if (route === "/admin/skill/update") { %>
+			<input
+				type="hidden"
+				name="id"
+				id="skill-id"
+				value="<%= skill ? skill.id : '' %>"
+			/>
+			<% } %>
+
 			<div class="grid grid-cols-2 gap-6">
 				<!-- Skill Name Input -->
 				<div>
@@ -48,13 +57,8 @@
 							class="ml-4 text-gray-300"
 							>No file chosen</span
 						>
-						<input
-							type="file"
-							id="image"
-							name="image"
-							class="hidden"
-							onchange="document.getElementById('image-file').textContent = this.files[0] ? this.files[0].name : 'No file chosen'"
-						/>
+						<input type="file" id="image" name="image" class="hidden" <%= route === "/admin/skill/store" ? 'required' : '' %> onchange="document.getElementById('image-file').textContent =
+						this.files[0] ? this.files[0].name : 'No file chosen'" />
 					</div>
 				</div>
 

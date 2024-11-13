@@ -11,7 +11,7 @@ router.get("/dashboard", is_authenticated, dashboard_controller.dashboard);
 // Skill routes
 router.get("/skills", is_authenticated, skill_controller.skill_index);
 router.get("/skill/create", is_authenticated, skill_controller.skill_create);
-router.post("/skill/store", is_authenticated, skill_controller.skill_store);
+// router.post("/skill/store", is_authenticated, skill_controller.skill_store);
 router.get("/skill/edit/:id", is_authenticated, skill_controller.skill_edit);
 router.post("/skill/update", is_authenticated, skill_controller.skill_update);
 
