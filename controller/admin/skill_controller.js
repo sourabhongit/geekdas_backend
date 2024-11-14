@@ -53,16 +53,13 @@ exports.skill_store = async (req, res) => {
 			return res.status(500).send("Error uploading file.");
 		}
 
-		// Access form data and uploaded file
 		const { name, level, order } = req.body;
 		const image = req.file;
 		try {
-			// Check if the image was uploaded
 			if (!image) {
 				return res.status(400).send("Image upload failed.");
 			}
 
-			// Insert data into the database
 			await Skill.create({
 				name: name,
 				level: level,
@@ -70,11 +67,9 @@ exports.skill_store = async (req, res) => {
 				image: image.filename,
 			});
 
-			// Redirect to skills page after success
 			return res.status(200).redirect("/admin/skills");
 		} catch (err) {
 			console.error("Database error:", err);
-			// Redirect back to the create page with a failure status
 			return res.status(400).redirect("/admin/skills/create");
 		}
 	});
@@ -116,12 +111,10 @@ exports.skill_update = async (req, res) => {
 			return handleResponse(404, "Skill not found");
 		}
 
-		// Handle file upload if there's an image file
 		if (req.file) {
 			const destinationPath = path.join(__dirname, "../../public/storage/skill");
 			const filenameFunction = (req, file) => `skill_${Date.now()}${path.extname(file.originalname)}`;
 
-			// Set up multer with the destination and filename function
 			const uploadSingle = upload(destinationPath, filenameFunction).single("image");
 
 			uploadSingle(req, res, async (err) => {
@@ -129,14 +122,13 @@ exports.skill_update = async (req, res) => {
 					return res.status(400).json({ message: `File upload failed: ${err.message}` });
 				}
 
-				// Proceed with updating skill data after file upload
 				const { name, level, order } = req.body;
 
 				const fieldsToUpdate = {
 					name: name || skill.name,
 					level: level || skill.level,
 					order: order || skill.order,
-					image: req.file ? req.file.filename : skill.image, // Update image if a new file is uploaded
+					image: req.file ? req.file.filename : skill.image,
 				};
 
 				await updateSkillData(skill, fieldsToUpdate);
