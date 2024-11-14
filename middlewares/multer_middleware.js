@@ -1,8 +1,6 @@
-// middlewares/multer.js
 const multer = require("multer");
 const path = require("path");
 
-// Function to create a multer instance with a dynamic path and filename
 const upload = (destinationPath, filenameFunction) => {
 	const storage = multer.diskStorage({
 		destination: function (req, file, cb) {
