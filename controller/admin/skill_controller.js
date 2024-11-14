@@ -1,5 +1,6 @@
 const multer = require("multer");
 const path = require("path");
+const fs = require("fs");
 const Skill = require("../../models/auth/skill_model");
 const upload = require("../../middlewares/multer_middleware");
 
@@ -76,9 +77,9 @@ exports.skill_store = async (req, res) => {
 };
 
 exports.skill_edit = async (req, res) => {
+	let skill = await Skill.findById(req.params.id);
 	let pageHeader = "Edit Skill";
 	let route = "/admin/skill/update";
-	let skill = await Skill.findById(req.params.id);
 	if (!skill) {
 		return res.status(404).send("Not able to fetch skill data.");
 	}
@@ -91,64 +92,59 @@ exports.skill_edit = async (req, res) => {
 };
 
 exports.skill_update = async (req, res) => {
-	// Helper function to find and update skill
-	const updateSkillData = async (skill, fieldsToUpdate) => {
-		Object.keys(fieldsToUpdate).forEach((key) => {
-			if (fieldsToUpdate[key] !== undefined) skill[key] = fieldsToUpdate[key];
-		});
-		await skill.save();
+	const destinationPath = path.join(__dirname, "../../public/storage/skill");
+	const filenameFunction = (req, file) => {
+		return `skill_${Date.now()}${path.extname(file.originalname)}`;
 	};
-
-	// Helper function to handle the response
-	const handleResponse = (status, message, skill) => {
-		return res.status(status).json({ message, skill });
-	};
-
-	try {
-		const skillId = req.body.id;
-		const skill = await Skill.findById(skillId);
-		if (!skill) {
-			return handleResponse(404, "Skill not found");
+	const uploadSingle = upload(destinationPath, filenameFunction).single("image");
+	uploadSingle(req, res, async (err) => {
+		if (err) {
+			console.error("File upload failed:", err);
+			return res.redirect("back");
 		}
 
-		if (req.file) {
-			const destinationPath = path.join(__dirname, "../../public/storage/skill");
-			const filenameFunction = (req, file) => `skill_${Date.now()}${path.extname(file.originalname)}`;
+		try {
+			const skillId = req.body.id;
+			const skill = await Skill.findById(skillId);
+			if (!skill) {
+				return res.redirect("back");
+			}
 
-			const uploadSingle = upload(destinationPath, filenameFunction).single("image");
-
-			uploadSingle(req, res, async (err) => {
-				if (err) {
-					return res.status(400).json({ message: `File upload failed: ${err.message}` });
-				}
-
-				const { name, level, order } = req.body;
-
-				const fieldsToUpdate = {
-					name: name || skill.name,
-					level: level || skill.level,
-					order: order || skill.order,
-					image: req.file ? req.file.filename : skill.image,
-				};
-
-				await updateSkillData(skill, fieldsToUpdate);
-				return handleResponse(200, "Skill updated successfully", skill);
-			});
-		} else {
-			// No image file uploaded; only update other fields
 			const { name, level, order } = req.body;
 
+			// Update only the fields that are provided
 			const fieldsToUpdate = {
 				name: name || skill.name,
 				level: level || skill.level,
 				order: order || skill.order,
 			};
 
-			await updateSkillData(skill, fieldsToUpdate);
-			return handleResponse(200, "Skill updated successfully", skill);
+			// If there's an uploaded file, update the image path
+			if (req.file) {
+				// Define the path to the existing file
+				const oldImagePath = path.join(__dirname, "../../public/storage/skill", skill.image);
+
+				// Delete the old file if it exists
+				if (skill.image && fs.existsSync(oldImagePath)) {
+					fs.unlink(oldImagePath, (err) => {
+						if (err) {
+							console.error("Error deleting old image:", err);
+						}
+					});
+				}
+
+				// Update the new image path
+				fieldsToUpdate.image = req.file.filename;
+			}
+
+			// Update the skill object
+			Object.assign(skill, fieldsToUpdate);
+			await skill.save();
+
+			return res.redirect("/admin/skills");
+		} catch (error) {
+			console.error("Error updating skill:", error);
+			return res.redirect("back");
 		}
-	} catch (error) {
-		console.error("Error updating skill:", error);
-		return res.status(500).json({ message: `Internal server error: ${error.message}` });
-	}
+	});
 };
