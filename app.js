@@ -20,6 +20,12 @@ app.use(cors({ origin: process.env.CLIENT_URL || "http://localhost:3000" }));
 // Set views
 app.set("views", path.join(__dirname, "./views"));
 
+// Middleware to store current route in local
+app.use((req, res, next) => {
+	res.locals.activeUrl = req.originalUrl;
+	next();
+});
+
 // Database connection
 ConnectDB();
 

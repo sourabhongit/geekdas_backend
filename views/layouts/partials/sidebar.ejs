@@ -15,32 +15,22 @@
 	<div>
 		<ul class="my-5 mx-2">
 			<a href="/admin/dashboard">
-				<li class="side-menu-list rounded-md hover:bg-white cursor-pointer hover:text-black">
-					<i class="fa-solid fa-table-columns fa-lg"></i>
-					<span class="side-bar-text">Dashboard</span>
+				<li class="side-menu-list mb-1.5 rounded-md cursor-pointer <%= activeUrl === '/admin/dashboard' ? 'bg-white text-black' : 'hover:bg-white hover:text-black' %>">
+					<i class="fa-solid fa-table-columns fa-lg"></i><span class="side-bar-text">Dashboard</span>
 				</li>
 			</a>
 			<a href="/admin/skills">
-				<li class="side-menu-list rounded-md hover:bg-white cursor-pointer hover:text-black">
-					<i class="fa-solid fa-code fa-lg"></i>
-					<span class="side-bar-text">Skills</span>
-				</li>
+				<li class="side-menu-list mb-1.5 rounded-md cursor-pointer <%= activeUrl === '/admin/skills' ? 'bg-white text-black' : 'hover:bg-white hover:text-black' %>"><i class="fa-solid fa-code fa-lg"></i><span class="side-bar-text">Skills</span></li>
 			</a>
 			<a href="/admin/projects">
-				<li class="side-menu-list rounded-md hover:bg-white cursor-pointer hover:text-black">
-					<i class="fa-solid fa-list-check fa-lg"></i>
-					<span class="side-bar-text">Projects</span>
-				</li>
+				<li class="side-menu-list mb-1.5 rounded-md cursor-pointer <%= activeUrl === '/admin/projects' ? 'bg-white text-black' : 'hover:bg-white hover:text-black' %>"><i class="fa-solid fa-list-check fa-lg"></i><span class="side-bar-text">Projects</span></li>
 			</a>
-			<li class="side-menu-list rounded-md hover:bg-white cursor-pointer hover:text-black">
+			<li class="side-menu-list mb-1.5 rounded-md cursor-pointer hover:bg-white hover:text-black">
 				<form
 					action="/admin/auth/logout"
 					method="POST"
 				>
-					<button type="submit">
-						<i class="fa-solid fa-arrow-right-from-bracket fa-lg"></i>
-						<span class="side-bar-text">Logout</span>
-					</button>
+					<button type="submit"><i class="fa-solid fa-arrow-right-from-bracket fa-lg"></i><span class="side-bar-text">Logout</span></button>
 				</form>
 			</li>
 		</ul>
