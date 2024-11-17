@@ -19,5 +19,7 @@ router.post("/skill/update", is_authenticated, skill_controller.skill_update);
 router.get("/projects", is_authenticated, project_controller.project_index);
 router.get("/project/create", is_authenticated, project_controller.project_create);
 router.post("/project/store", is_authenticated, project_controller.project_store);
+router.get("/project/edit/:id", is_authenticated, project_controller.project_edit);
+router.post("/project/update", is_authenticated, project_controller.project_update);
 
 module.exports = router;
