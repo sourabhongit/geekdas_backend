@@ -112,19 +112,15 @@ exports.skill_update = async (req, res) => {
 
 			const { name, level, order } = req.body;
 
-			// Update only the fields that are provided
 			const fieldsToUpdate = {
 				name: name || skill.name,
 				level: level || skill.level,
 				order: order || skill.order,
 			};
 
-			// If there's an uploaded file, update the image path
 			if (req.file) {
-				// Define the path to the existing file
 				const oldImagePath = path.join(__dirname, "../../public/storage/skill", skill.image);
 
-				// Delete the old file if it exists
 				if (skill.image && fs.existsSync(oldImagePath)) {
 					fs.unlink(oldImagePath, (err) => {
 						if (err) {
@@ -133,11 +129,9 @@ exports.skill_update = async (req, res) => {
 					});
 				}
 
-				// Update the new image path
 				fieldsToUpdate.image = req.file.filename;
 			}
 
-			// Update the skill object
 			Object.assign(skill, fieldsToUpdate);
 			await skill.save();
 
@@ -147,4 +141,30 @@ exports.skill_update = async (req, res) => {
 			return res.redirect("back");
 		}
 	});
+};
+
+exports.skill_delete = async (req, res) => {
+	try {
+		const skill = await Skill.findById(req.params.id);
+		if (!skill) {
+			return res.status(404).send("Skill not found.");
+		}
+
+		const oldImagePath = path.join(__dirname, "../../public/storage/skill", skill.image);
+
+		if (skill.image && fs.existsSync(oldImagePath)) {
+			fs.unlink(oldImagePath, (err) => {
+				if (err) {
+					console.error("Error deleting old image:", err);
+				}
+			});
+		}
+		await skill.deleteOne();
+		console.log("Skill deleted successfully.");
+
+		return res.redirect("back");
+	} catch (error) {
+		console.error("Error deleting skill:", error);
+		return res.status(500).send("An error occurred while deleting the skill.");
+	}
 };

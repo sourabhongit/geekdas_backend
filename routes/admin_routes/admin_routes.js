@@ -14,6 +14,7 @@ router.get("/skill/create", is_authenticated, skill_controller.skill_create);
 router.post("/skill/store", is_authenticated, skill_controller.skill_store);
 router.get("/skill/edit/:id", is_authenticated, skill_controller.skill_edit);
 router.post("/skill/update", is_authenticated, skill_controller.skill_update);
+router.get("/skill/delete/:id", is_authenticated, skill_controller.skill_delete);
 
 // Project routes
 router.get("/projects", is_authenticated, project_controller.project_index);
