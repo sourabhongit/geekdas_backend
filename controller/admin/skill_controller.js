@@ -16,14 +16,16 @@ exports.skill_index = async (req, res) => {
 		res.render("skill/index", { skills }, (err, html) => {
 			if (err) {
 				console.error("Error rendering skill/index:", err);
-				return res.status(500).send("Error rendering skill page");
+				const redirectUrl = req.get("Referrer") || "/";
+				return res.redirect(redirectUrl);
 			}
 
 			res.render("layouts/admin_main", { Section: html });
 		});
 	} catch (error) {
 		console.error("Database error:", error);
-		return res.status(500).send("Error fetching skills from the database");
+		const redirectUrl = req.get("Referrer") || "/";
+		return res.redirect(redirectUrl);
 	}
 };
 
@@ -33,7 +35,8 @@ exports.skill_create = (req, res) => {
 	let skill = {};
 	res.render("skill/create_or_update", { pageHeader, route, skill }, (err, html) => {
 		if (err) {
-			return res.status(500).send("Not able to render create page.");
+			const redirectUrl = req.get("Referrer") || "/";
+			return res.redirect(redirectUrl);
 		}
 		res.render("layouts/admin_main", { Section: html });
 	});
@@ -51,14 +54,16 @@ exports.skill_store = async (req, res) => {
 	uploadSingle(req, res, async function (err) {
 		if (err) {
 			console.error("Multer error:", err);
-			return res.status(500).send("Error uploading file.");
+			const redirectUrl = req.get("Referrer") || "/";
+			return res.redirect(redirectUrl);
 		}
 
 		const { name, level, order } = req.body;
 		const image = req.file;
 		try {
 			if (!image) {
-				return res.status(400).send("Image upload failed.");
+				const redirectUrl = req.get("Referrer") || "/";
+				return res.redirect(redirectUrl);
 			}
 
 			await Skill.create({
@@ -71,7 +76,8 @@ exports.skill_store = async (req, res) => {
 			return res.status(200).redirect("/admin/skills");
 		} catch (err) {
 			console.error("Database error:", err);
-			return res.status(400).redirect("/admin/skills/create");
+			const redirectUrl = req.get("Referrer") || "/";
+			return res.redirect(redirectUrl);
 		}
 	});
 };
@@ -81,11 +87,13 @@ exports.skill_edit = async (req, res) => {
 	let pageHeader = "Edit Skill";
 	let route = "/admin/skill/update";
 	if (!skill) {
-		return res.status(404).send("Not able to fetch skill data.");
+		const redirectUrl = req.get("Referrer") || "/";
+		return res.redirect(redirectUrl);
 	}
 	res.render("skill/create_or_update", { pageHeader, route, skill }, (err, html) => {
 		if (err) {
-			return res.status(500).send("Error rendering dashboard");
+			const redirectUrl = req.get("Referrer") || "/";
+			return res.redirect(redirectUrl);
 		}
 		res.render("layouts/admin_main", { Section: html });
 	});
@@ -100,14 +108,16 @@ exports.skill_update = async (req, res) => {
 	uploadSingle(req, res, async (err) => {
 		if (err) {
 			console.error("File upload failed:", err);
-			return res.redirect("back");
+			const redirectUrl = req.get("Referrer") || "/";
+			return res.redirect(redirectUrl);
 		}
 
 		try {
 			const skillId = req.body.id;
 			const skill = await Skill.findById(skillId);
 			if (!skill) {
-				return res.redirect("back");
+				const redirectUrl = req.get("Referrer") || "/";
+				return res.redirect(redirectUrl);
 			}
 
 			const { name, level, order } = req.body;
@@ -138,7 +148,8 @@ exports.skill_update = async (req, res) => {
 			return res.redirect("/admin/skills");
 		} catch (error) {
 			console.error("Error updating skill:", error);
-			return res.redirect("back");
+			const redirectUrl = req.get("Referrer") || "/";
+			return res.redirect(redirectUrl);
 		}
 	});
 };
@@ -147,7 +158,8 @@ exports.skill_delete = async (req, res) => {
 	try {
 		const skill = await Skill.findById(req.params.id);
 		if (!skill) {
-			return res.status(404).send("Skill not found.");
+			const redirectUrl = req.get("Referrer") || "/";
+			return res.redirect(redirectUrl);
 		}
 
 		const oldImagePath = path.join(__dirname, "../../public/storage/skill", skill.image);
@@ -162,9 +174,11 @@ exports.skill_delete = async (req, res) => {
 		await skill.deleteOne();
 		console.log("Skill deleted successfully.");
 
-		return res.redirect("back");
+		const redirectUrl = req.get("Referrer") || "/";
+		return res.redirect(redirectUrl);
 	} catch (error) {
 		console.error("Error deleting skill:", error);
-		return res.status(500).send("An error occurred while deleting the skill.");
+		const redirectUrl = req.get("Referrer") || "/";
+		return res.redirect(redirectUrl);
 	}
 };
